@@ -10,6 +10,7 @@ namespace Console2048
     class Program
     {
         static int[,] Grid = new int[4, 4];
+        static int Score = 0;
 
         static void Main(string[] args)
         {
@@ -25,6 +26,7 @@ namespace Console2048
                 {
                     AddNumber();
                     C.Clear();
+                    C.WriteLine("Score: " + Score);
                     WriteGrid();
                     C.WriteLine();
                     C.Write(">: ");
@@ -45,10 +47,12 @@ namespace Console2048
                                     }
                                     else if (Grid[i, ii] == Grid[i, ii + 1])
                                     {
-                                        Grid[i, ii] = Grid[i, ii + 1] * 2;
+                                        var n = Grid[i, ii + 1] * 2;
+                                        Grid[i, ii] = n;
                                         Grid[i, ii + 1] = 0;
 
-                                        if (Grid[i, ii + 1] * 2 == 2048) throw new Exception("You won the game!");
+                                        AddScore(n);
+                                        if (n == 2048) throw new Exception("You won the game!");
                                     }
                                 }
                             }
@@ -67,10 +71,12 @@ namespace Console2048
                                     }
                                     else if (Grid[i, ii] == Grid[i, ii - 1])
                                     {
-                                        Grid[i, ii] = Grid[i, ii - 1] * 2;
+                                        var n = Grid[i, ii - 1] * 2;
+                                        Grid[i, ii] = n;
                                         Grid[i, ii - 1] = 0;
 
-                                        if (Grid[i, ii - 1] * 2 == 2048) throw new Exception("You won the game!");
+                                        AddScore(n);
+                                        if (n == 2048) throw new Exception("You won the game!");
                                     }
                                 }
                             }
@@ -89,10 +95,12 @@ namespace Console2048
                                     }
                                     else if (Grid[ii, i] == Grid[ii - 1, i])
                                     {
-                                        Grid[ii, i] = Grid[ii - 1, i] * 2;
+                                        var n = Grid[ii - 1, i] * 2;
+                                        Grid[ii, i] = n;
                                         Grid[ii - 1, i] = 0;
 
-                                        if (Grid[ii - 1, i] * 2 == 2048) throw new Exception("You won the game!");
+                                        AddScore(n);
+                                        if (n == 2048) throw new Exception("You won the game!");
                                     }
                                 }
                             }
@@ -111,10 +119,12 @@ namespace Console2048
                                     }
                                     else if (Grid[ii, i] == Grid[ii + 1, i])
                                     {
-                                        Grid[ii, i] = Grid[ii + 1, i] * 2;
+                                        var n = Grid[ii + 1, i] * 2;
+                                        Grid[ii, i] = n;
                                         Grid[ii + 1, i] = 0;
 
-                                        if (Grid[ii + 1, i] * 2 == 2048) throw new Exception("You won the game!");
+                                        AddScore(n);
+                                        if (n == 2048) throw new Exception("You won the game!");
                                     }
                                 }
                             }
@@ -127,6 +137,7 @@ namespace Console2048
                 {
                     C.Clear();
                     C.WriteLine(ex.Message);
+                    C.WriteLine("Your score was " + Score);
                     break;
                 }
             }
@@ -155,6 +166,52 @@ namespace Console2048
                 Grid[place.Item1, place.Item2] = rnd.Next(1, 3) * 2;
             }
             else throw new Exception("The game is over.");
+        }
+
+        static void AddScore(int toAdd)
+        {
+            switch (toAdd)
+            {
+                case 4:
+                    Score += 4;
+                    break;
+
+                case 8:
+                    Score += 16;
+                    break;
+
+                case 16:
+                    Score += 48;
+                    break;
+
+                case 32:
+                    Score += 128;
+                    break;
+
+                case 64:
+                    Score += 320;
+                    break;
+
+                case 128:
+                    Score += 768;
+                    break;
+
+                case 256:
+                    Score += 1792;
+                    break;
+
+                case 512:
+                    Score += 4096;
+                    break;
+
+                case 1024:
+                    Score += 9216;
+                    break;
+
+                case 2048:
+                    Score += 20480;
+                    break;
+            }
         }
 
         static void WriteGrid()
