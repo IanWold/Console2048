@@ -13,6 +13,9 @@ namespace Console2048
 
         static void Main(string[] args)
         {
+            C.BackgroundColor = ConsoleColor.White;
+            C.ForegroundColor = ConsoleColor.Black;
+
             ConsoleKey Input = ConsoleKey.A;
             AddNumber();
 
@@ -167,27 +170,92 @@ namespace Console2048
                         switch (Grid[i, ii].ToString().Length)
                         {
                             case 1:
-                                C.Write(" |    {0}", Grid[i, ii].ToString());
+                                C.Write(" |    ");
                                 break;
 
                             case 2:
-                                C.Write(" |   {0}", Grid[i, ii].ToString());
+                                C.Write(" |   ");
                                 break;
 
                             case 3:
-                                C.Write(" |  {0}", Grid[i, ii].ToString());
+                                C.Write(" |  ");
                                 break;
 
                             case 4:
-                                C.Write(" | {0}", Grid[i, ii].ToString());
+                                C.Write(" | ");
                                 break;
                         }
+
+                        WriteColor(Grid[i, ii]);
                     }
                     else C.Write(" |     ");
                 }
                 C.WriteLine();
                 C.WriteLine("----------------------------");
             }
+        }
+
+        static void WriteColor(int toWrite)
+        {
+            switch (toWrite)
+            {
+                case 2:
+                    C.ForegroundColor = ConsoleColor.DarkGray;
+                    C.Write(toWrite);
+                    break;
+
+                case 4:
+                    C.ForegroundColor = ConsoleColor.DarkGray;
+                    C.Write(toWrite);
+                    break;
+
+                case 8:
+                    C.ForegroundColor = ConsoleColor.DarkYellow;
+                    C.Write(toWrite);
+                    break;
+
+                case 16:
+                    C.ForegroundColor = ConsoleColor.DarkYellow;
+                    C.Write(toWrite);
+                    break;
+
+                case 32:
+                    C.ForegroundColor = ConsoleColor.DarkRed;
+                    C.Write(toWrite);
+                    break;
+
+                case 64:
+                    C.ForegroundColor = ConsoleColor.DarkRed;
+                    C.Write(toWrite);
+                    break;
+
+                case 128:
+                    C.ForegroundColor = ConsoleColor.Red;
+                    C.Write(toWrite);
+                    break;
+
+                case 256:
+                    C.ForegroundColor = ConsoleColor.Red;
+                    C.Write(toWrite);
+                    break;
+
+                case 512:
+                    C.ForegroundColor = ConsoleColor.DarkMagenta;
+                    C.Write(toWrite);
+                    break;
+
+                case 1024:
+                    C.ForegroundColor = ConsoleColor.DarkMagenta;
+                    C.Write(toWrite);
+                    break;
+
+                case 2048:
+                    C.ForegroundColor = ConsoleColor.Magenta;
+                    C.Write(toWrite);
+                    break;
+            }
+
+            C.ForegroundColor = ConsoleColor.Black;
         }
     }
 }
