@@ -42,22 +42,26 @@ namespace Console2048
                     switch (Input)
                     {
                         case ConsoleKey.LeftArrow:
-                            for (int i = 0; i < 4; i++) //rows
+                            for (int row = 0; row < 4; row++) //rows
                             {
-                                for (int ii = 0; ii < 3; ii++) //collumns
+                                for (int col = 3; col > 0; col--) // shift columns over
                                 {
-                                    if (Grid[i, ii] == 0)
+                                    if (Grid[row, col - 1] == 0)
                                     {
-                                        Grid[i, ii] = Grid[i, ii + 1];
-                                        Grid[i, ii + 1] = 0;
+                                        Grid[row, col - 1] = Grid[row, col];
+                                        Grid[row, col] = 0;
+                                        if (Grid[row, col - 1] != 0) col++;
                                     }
-                                    else if (Grid[i, ii] == Grid[i, ii + 1])
+                                }
+                                for (int col = 0; col < 3; col++) //columns
+                                {
+                                    if (Grid[row, col] == Grid[row, col + 1])
                                     {
-                                        var n = Grid[i, ii + 1] * 2;
-                                        Grid[i, ii] = n;
-                                        Grid[i, ii + 1] = 0;
+                                        var n = Grid[row, col + 1] * 2;
+                                        Grid[row, col] = n;
+                                        Grid[row, col + 1] = 0;
 
-                                        AddScore(n);
+                                        Score += n;
                                         if (n == 2048) throw new Exception("You won the game!");
                                     }
                                 }
@@ -66,22 +70,26 @@ namespace Console2048
                             break;
 
                         case ConsoleKey.RightArrow:
-                            for (int i = 0; i < 4; i++) //rows
+                            for (int row = 0; row < 4; row++) //rows
                             {
-                                for (int ii = 3; ii > 0; ii--) //collumns
+                                for (int col = 0; col < 3; col++) // shift columns over
                                 {
-                                    if (Grid[i, ii] == 0)
+                                    if (Grid[row, col + 1] == 0)
                                     {
-                                        Grid[i, ii] = Grid[i, ii - 1];
-                                        Grid[i, ii - 1] = 0;
+                                        Grid[row, col + 1] = Grid[row, col];
+                                        Grid[row, col] = 0;
+                                        if (Grid[row, col + 1] != 0) col--;
                                     }
-                                    else if (Grid[i, ii] == Grid[i, ii - 1])
+                                }
+                                for (int col = 3; col > 0; col--) //columns
+                                {
+                                    if (Grid[row, col] == Grid[row, col - 1])
                                     {
-                                        var n = Grid[i, ii - 1] * 2;
-                                        Grid[i, ii] = n;
-                                        Grid[i, ii - 1] = 0;
+                                        var n = Grid[row, col - 1] * 2;
+                                        Grid[row, col] = n;
+                                        Grid[row, col - 1] = 0;
 
-                                        AddScore(n);
+                                        Score += n;
                                         if (n == 2048) throw new Exception("You won the game!");
                                     }
                                 }
@@ -90,22 +98,26 @@ namespace Console2048
                             break;
 
                         case ConsoleKey.DownArrow:
-                            for (int i = 0; i < 4; i++) //columns
+                            for (int col = 0; col < 4; col++) //columns
                             {
-                                for (int ii = 3; ii > 0; ii--) //rows
+                                for (int row = 0; row < 3; row++) // shift rows over
                                 {
-                                    if (Grid[ii, i] == 0)
+                                    if (Grid[row + 1, col] == 0)
                                     {
-                                        Grid[ii, i] = Grid[ii - 1, i];
-                                        Grid[ii - 1, i] = 0;
+                                        Grid[row + 1, col] = Grid[row, col];
+                                        Grid[row, col] = 0;
+                                        if (Grid[row + 1, col] != 0) row--;
                                     }
-                                    else if (Grid[ii, i] == Grid[ii - 1, i])
+                                }
+                                for (int row = 3; row > 0; row--) //rows
+                                {
+                                    if (Grid[row, col] == Grid[row - 1, col])
                                     {
-                                        var n = Grid[ii - 1, i] * 2;
-                                        Grid[ii, i] = n;
-                                        Grid[ii - 1, i] = 0;
+                                        var n = Grid[row - 1, col] * 2;
+                                        Grid[row, col] = n;
+                                        Grid[row - 1, col] = 0;
 
-                                        AddScore(n);
+                                        Score += n;
                                         if (n == 2048) throw new Exception("You won the game!");
                                     }
                                 }
@@ -114,22 +126,26 @@ namespace Console2048
                             break;
 
                         case ConsoleKey.UpArrow:
-                            for (int i = 0; i < 4; i++) //columns
+                            for (int col = 0; col < 4; col++) //columns
                             {
-                                for (int ii = 0; ii < 3; ii++) //rows
+                                for (int row = 3; row > 0; row--) // shift rows over
                                 {
-                                    if (Grid[ii, i] == 0)
+                                    if (Grid[row - 1, col] == 0)
                                     {
-                                        Grid[ii, i] = Grid[ii + 1, i];
-                                        Grid[ii + 1, i] = 0;
+                                        Grid[row - 1, col] = Grid[row, col];
+                                        Grid[row, col] = 0;
+                                        if (Grid[row - 1, col] != 0) row++;
                                     }
-                                    else if (Grid[ii, i] == Grid[ii + 1, i])
+                                }
+                                for (int row = 0; row < 3; row++) //rows
+                                {
+                                    if (Grid[row, col] == Grid[row + 1, col])
                                     {
-                                        var n = Grid[ii + 1, i] * 2;
-                                        Grid[ii, i] = n;
-                                        Grid[ii + 1, i] = 0;
+                                        var n = Grid[row + 1, col] * 2;
+                                        Grid[row, col] = n;
+                                        Grid[row + 1, col] = 0;
 
-                                        AddScore(n);
+                                        Score += n;
                                         if (n == 2048) throw new Exception("You won the game!");
                                     }
                                 }
@@ -172,59 +188,11 @@ namespace Console2048
                 Tuple<int, int> place = new Tuple<int, int>(rnd.Next(0, 4), rnd.Next(0, 4));
 
                 while (Grid[place.Item1, place.Item2] != 0)
-                {
                     place = new Tuple<int, int>(rnd.Next(0, 4), rnd.Next(0, 4));
-                }
 
                 Grid[place.Item1, place.Item2] = rnd.Next(1, 3) * 2;
             }
             else throw new Exception("The game is over.");
-        }
-
-        static void AddScore(int toAdd)
-        {
-            switch (toAdd)
-            {
-                case 4:
-                    Score += 4;
-                    break;
-
-                case 8:
-                    Score += 16;
-                    break;
-
-                case 16:
-                    Score += 48;
-                    break;
-
-                case 32:
-                    Score += 128;
-                    break;
-
-                case 64:
-                    Score += 320;
-                    break;
-
-                case 128:
-                    Score += 768;
-                    break;
-
-                case 256:
-                    Score += 1792;
-                    break;
-
-                case 512:
-                    Score += 4096;
-                    break;
-
-                case 1024:
-                    Score += 9216;
-                    break;
-
-                case 2048:
-                    Score += 20480;
-                    break;
-            }
         }
 
         static void WriteGrid()
@@ -241,22 +209,24 @@ namespace Console2048
                         {
                             case 1:
                                 C.Write(" |    ");
+                                WriteColor(Grid[i, ii], ConsoleColor.DarkGray);
                                 break;
 
                             case 2:
                                 C.Write(" |   ");
+                                WriteColor(Grid[i, ii], ConsoleColor.DarkRed);
                                 break;
 
                             case 3:
                                 C.Write(" |  ");
+                                WriteColor(Grid[i, ii], ConsoleColor.Red);
                                 break;
 
                             case 4:
                                 C.Write(" | ");
+                                WriteColor(Grid[i, ii], ConsoleColor.DarkMagenta);
                                 break;
                         }
-
-                        WriteColor(Grid[i, ii]);
                     }
                     else C.Write(" |     ");
                 }
@@ -265,66 +235,10 @@ namespace Console2048
             }
         }
 
-        static void WriteColor(int toWrite)
+        static void WriteColor(int toWrite, ConsoleColor color)
         {
-            switch (toWrite)
-            {
-                case 2:
-                    C.ForegroundColor = ConsoleColor.DarkGray;
-                    C.Write(toWrite);
-                    break;
-
-                case 4:
-                    C.ForegroundColor = ConsoleColor.DarkGray;
-                    C.Write(toWrite);
-                    break;
-
-                case 8:
-                    C.ForegroundColor = ConsoleColor.DarkYellow;
-                    C.Write(toWrite);
-                    break;
-
-                case 16:
-                    C.ForegroundColor = ConsoleColor.DarkYellow;
-                    C.Write(toWrite);
-                    break;
-
-                case 32:
-                    C.ForegroundColor = ConsoleColor.DarkRed;
-                    C.Write(toWrite);
-                    break;
-
-                case 64:
-                    C.ForegroundColor = ConsoleColor.DarkRed;
-                    C.Write(toWrite);
-                    break;
-
-                case 128:
-                    C.ForegroundColor = ConsoleColor.Red;
-                    C.Write(toWrite);
-                    break;
-
-                case 256:
-                    C.ForegroundColor = ConsoleColor.Red;
-                    C.Write(toWrite);
-                    break;
-
-                case 512:
-                    C.ForegroundColor = ConsoleColor.DarkMagenta;
-                    C.Write(toWrite);
-                    break;
-
-                case 1024:
-                    C.ForegroundColor = ConsoleColor.DarkMagenta;
-                    C.Write(toWrite);
-                    break;
-
-                case 2048:
-                    C.ForegroundColor = ConsoleColor.Magenta;
-                    C.Write(toWrite);
-                    break;
-            }
-
+            C.ForegroundColor = color;
+            C.Write(toWrite);
             C.ForegroundColor = ConsoleColor.Black;
         }
     }
