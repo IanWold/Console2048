@@ -12,6 +12,8 @@ namespace Console2048
         static int[,] Grid = new int[4, 4];
         static int Score = 0;
 
+        static bool DoAdd = true;
+
         static void Main(string[] args)
         {
             C.BackgroundColor = ConsoleColor.White;
@@ -24,11 +26,15 @@ namespace Console2048
             {
                 try
                 {
-                    AddNumber();
-                    C.Clear();
-                    C.WriteLine("Score: " + Score);
-                    WriteGrid();
-                    C.WriteLine();
+                    if (DoAdd)
+                    {
+                        AddNumber();
+                        C.Clear();
+                        C.WriteLine("Score: " + Score);
+                        WriteGrid();
+                        C.WriteLine();
+                    }
+                    else DoAdd = true;
                     C.Write(">: ");
 
                     Input = C.ReadKey().Key;
@@ -129,6 +135,13 @@ namespace Console2048
                                 }
                             }
 
+                            break;
+
+                        default:
+                            C.WriteLine();
+                            C.WriteLine("That is not an acceptable input.");
+                            C.WriteLine("Use the arrow keys to move around.");
+                            DoAdd = false;
                             break;
 
                     }
