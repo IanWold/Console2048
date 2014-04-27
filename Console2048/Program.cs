@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using C = System.Console;
 
 namespace Console2048
@@ -11,8 +8,7 @@ namespace Console2048
     {
         static int[,] Grid = new int[4, 4];
         static int Score = 0;
-
-        static bool DoAdd = true;
+        static List<ConsoleKey> Konami = new List<ConsoleKey>();
 
         static void Intro()
         {
@@ -41,6 +37,8 @@ namespace Console2048
             Intro();
 
             ConsoleKey Input = ConsoleKey.A;
+            bool DoAdd = true;
+
             AddNumber();
 
             while (true)
@@ -59,6 +57,8 @@ namespace Console2048
                     C.Write(">: ");
 
                     Input = C.ReadKey().Key;
+                    Konami.Add(Input);
+                    CheckKonami();
 
                     switch (Input)
                     {
@@ -309,6 +309,23 @@ namespace Console2048
             C.ForegroundColor = color;
             C.Write(toWrite);
             C.ForegroundColor = ConsoleColor.Black;
+        }
+
+        private static void CheckKonami()
+        {
+            var n = Konami.Count;
+            if (n > 9)
+                if (Konami[n - 1] == ConsoleKey.A)
+                    if (Konami[n - 2] == ConsoleKey.B)
+                        if (Konami[n - 3] == ConsoleKey.RightArrow)
+                            if (Konami[n - 4] == ConsoleKey.LeftArrow)
+                                if (Konami[n - 5] == ConsoleKey.RightArrow)
+                                    if (Konami[n - 6] == ConsoleKey.LeftArrow)
+                                        if (Konami[n - 7] == ConsoleKey.DownArrow)
+                                            if (Konami[n - 8] == ConsoleKey.DownArrow)
+                                                if (Konami[n - 9] == ConsoleKey.UpArrow)
+                                                    if (Konami[n - 10] == ConsoleKey.UpArrow)
+                                                        throw new Exception("Open source easter eggs aren't as much fun.");
         }
     }
 }
