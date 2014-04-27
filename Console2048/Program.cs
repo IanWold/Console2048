@@ -152,49 +152,61 @@ namespace Console2048
             switch (Input)
             {
                 case ConsoleKey.LeftArrow:
-                    for (int col = 3; col > 0; col--)
+                    for (int n = 3; n > 0; n--) //Shift rows three times
                     {
-                        if (Grid[i, col - 1] == 0)
+                        for (int col = n; col > 0; col--)
                         {
-                            Grid[i, col - 1] = Grid[i, col];
-                            Grid[i, col] = 0;
-                            if (Grid[i, col - 1] != 0) col++;
+                            if (Grid[i, col - 1] == 0)
+                            {
+                                Grid[i, col - 1] = Grid[i, col];
+                                Grid[i, col] = 0;
+                                if (Grid[i, col - 1] != 0) col++;
+                            }
                         }
                     }
                     break;
 
                 case ConsoleKey.RightArrow:
-                    for (int col = 0; col < 3; col++)
+                    for (int n = 0; n < 3; n++)
                     {
-                        if (Grid[i, col + 1] == 0)
+                        for (int col = 0; col < 3; col++)
                         {
-                            Grid[i, col + 1] = Grid[i, col];
-                            Grid[i, col] = 0;
-                            if (Grid[i, col + 1] != 0) col--;
+                            if (Grid[i, col + 1] == 0)
+                            {
+                                Grid[i, col + 1] = Grid[i, col];
+                                Grid[i, col] = 0;
+                                if (Grid[i, col + 1] != 0) col--;
+                            }
                         }
                     }
                     break;
 
                 case ConsoleKey.DownArrow:
-                    for (int row = 0; row < 3; row++) // shift rows over
+                    for (int n = 0; n < 3; n++)
                     {
-                        if (Grid[row + 1, i] == 0)
+                        for (int row = 0; row < 3; row++)
                         {
-                            Grid[row + 1, i] = Grid[row, i];
-                            Grid[row, i] = 0;
-                            if (Grid[row + 1, i] != 0) row--;
+                            if (Grid[row + 1, i] == 0)
+                            {
+                                Grid[row + 1, i] = Grid[row, i];
+                                Grid[row, i] = 0;
+                                if (Grid[row + 1, i] != 0) row--;
+                            }
                         }
                     }
                     break;
 
                 case ConsoleKey.UpArrow:
-                    for (int row = 3; row > 0; row--) // shift rows over
+                    for (int n = 3; n > 0; n--)
                     {
-                        if (Grid[row - 1, i] == 0)
+                        for (int row = 3; row > 0; row--)
                         {
-                            Grid[row - 1, i] = Grid[row, i];
-                            Grid[row, i] = 0;
-                            if (Grid[row - 1, i] != 0) row++;
+                            if (Grid[row - 1, i] == 0)
+                            {
+                                Grid[row - 1, i] = Grid[row, i];
+                                Grid[row, i] = 0;
+                                if (Grid[row - 1, i] != 0) row++;
+                            }
                         }
                     }
                     break;
@@ -206,7 +218,8 @@ namespace Console2048
             bool isOpen = false;
             for (int i = 0; i < 4; i++)
                 for (int ii = 0; ii < 4; ii++)
-                    if (Grid[i, ii] == 0) isOpen = true;
+                    if (Grid[i, ii] == 0)
+                        isOpen = true;
 
             if (isOpen)
             {
