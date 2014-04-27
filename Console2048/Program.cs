@@ -14,10 +14,31 @@ namespace Console2048
 
         static bool DoAdd = true;
 
+        static void Intro()
+        {
+            C.WriteLine("#################################");
+            C.WriteLine("           Console2048           ");
+            C.WriteLine("#################################");
+            C.WriteLine();
+            C.WriteLine("Use the arrow keys to move around");
+            C.WriteLine("        Type 'H' for help        ");
+            C.WriteLine();
+            C.WriteLine(" Combine numbers to get to 2048! ");
+            C.WriteLine();
+            C.WriteLine("#################################");
+            C.WriteLine();
+            C.Write("Press any key to start...");
+            C.ReadKey();
+            C.Clear();
+        }
+
         static void Main(string[] args)
         {
             C.BackgroundColor = ConsoleColor.White;
             C.ForegroundColor = ConsoleColor.Black;
+            C.Clear();
+
+            Intro();
 
             ConsoleKey Input = ConsoleKey.A;
             AddNumber();
@@ -123,6 +144,15 @@ namespace Console2048
                                 ShiftGrid(Input, col);
                             }
 
+                            break;
+
+                        case ConsoleKey.H:
+                            C.WriteLine();
+                            C.WriteLine("Console2048 Copyright 2014 Ian Wold");
+                            C.WriteLine("Licensed under the MIT Open-Source License");
+                            C.WriteLine();
+                            C.WriteLine("Use the arrow keys on the keyboard to move");
+                            DoAdd = false;
                             break;
 
                         default:
