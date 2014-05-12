@@ -63,87 +63,31 @@ namespace Console2048
                     switch (Input)
                     {
                         case ConsoleKey.LeftArrow:
-                            for (int row = 0; row < 4; row++) //rows
-                            {
-                                ShiftGrid(Input, row);
-                                for (int col = 0; col < 3; col++) //columns
-                                {
-                                    if (Grid[row, col] == Grid[row, col + 1])
-                                    {
-                                        var n = Grid[row, col + 1] * 2;
-                                        Grid[row, col] = n;
-                                        Grid[row, col + 1] = 0;
-
-                                        Score += n;
-                                        if (n == 2048) throw new Exception("You won the game!");
-                                    }
-                                }
-                                ShiftGrid(Input, row);
-                            }
-
+                            MoveGrid();
                             break;
 
                         case ConsoleKey.RightArrow:
-                            for (int row = 0; row < 4; row++) //rows
-                            {
-                                ShiftGrid(Input, row);
-                                for (int col = 3; col > 0; col--) //columns
-                                {
-                                    if (Grid[row, col] == Grid[row, col - 1])
-                                    {
-                                        var n = Grid[row, col - 1] * 2;
-                                        Grid[row, col] = n;
-                                        Grid[row, col - 1] = 0;
-
-                                        Score += n;
-                                        if (n == 2048) throw new Exception("You won the game!");
-                                    }
-                                }
-                                ShiftGrid(Input, row);
-                            }
-
+                            RotateGrid();
+                            RotateGrid();
+                            MoveGrid();
+                            RotateGrid();
+                            RotateGrid();
                             break;
 
                         case ConsoleKey.DownArrow:
-                            for (int col = 0; col < 4; col++) //columns
-                            {
-                                ShiftGrid(Input, col);
-                                for (int row = 3; row > 0; row--) //rows
-                                {
-                                    if (Grid[row, col] == Grid[row - 1, col])
-                                    {
-                                        var n = Grid[row - 1, col] * 2;
-                                        Grid[row, col] = n;
-                                        Grid[row - 1, col] = 0;
-
-                                        Score += n;
-                                        if (n == 2048) throw new Exception("You won the game!");
-                                    }
-                                }
-                                ShiftGrid(Input, col);
-                            }
-
+                            RotateGrid();
+                            MoveGrid();
+                            RotateGrid();
+                            RotateGrid();
+                            RotateGrid();
                             break;
 
                         case ConsoleKey.UpArrow:
-                            for (int col = 0; col < 4; col++) //columns
-                            {
-                                ShiftGrid(Input, col);
-                                for (int row = 0; row < 3; row++) //rows
-                                {
-                                    if (Grid[row, col] == Grid[row + 1, col])
-                                    {
-                                        var n = Grid[row + 1, col] * 2;
-                                        Grid[row, col] = n;
-                                        Grid[row + 1, col] = 0;
-
-                                        Score += n;
-                                        if (n == 2048) throw new Exception("You won the game!");
-                                    }
-                                }
-                                ShiftGrid(Input, col);
-                            }
-
+                            RotateGrid();
+                            RotateGrid();
+                            RotateGrid();
+                            MoveGrid();
+                            RotateGrid();
                             break;
 
                         case ConsoleKey.H:
@@ -177,69 +121,55 @@ namespace Console2048
             C.ReadKey();
         }
 
-        private static void ShiftGrid(ConsoleKey Input, int i)
+        private static void MoveGrid()
         {
-            switch (Input)
+            for (int row = 0; row < 4; row++) //rows
             {
-                case ConsoleKey.LeftArrow:
-                    for (int n = 3; n > 0; n--) //Shift rows three times
+                ShiftGrid(row);
+                for (int col = 0; col < 3; col++) //columns
+                {
+                    if (Grid[row, col] == Grid[row, col + 1])
                     {
-                        for (int col = n; col > 0; col--)
-                        {
-                            if (Grid[i, col - 1] == 0)
-                            {
-                                Grid[i, col - 1] = Grid[i, col];
-                                Grid[i, col] = 0;
-                                if (Grid[i, col - 1] != 0) col++;
-                            }
-                        }
-                    }
-                    break;
+                        var n = Grid[row, col + 1] * 2;
+                        Grid[row, col] = n;
+                        Grid[row, col + 1] = 0;
 
-                case ConsoleKey.RightArrow:
-                    for (int n = 0; n < 3; n++)
-                    {
-                        for (int col = 0; col < 3; col++)
-                        {
-                            if (Grid[i, col + 1] == 0)
-                            {
-                                Grid[i, col + 1] = Grid[i, col];
-                                Grid[i, col] = 0;
-                                if (Grid[i, col + 1] != 0) col--;
-                            }
-                        }
+                        Score += n;
+                        if (n == 2048) throw new Exception("You won the game!");
                     }
-                    break;
+                }
+                ShiftGrid(row);
+            }
+        }
 
-                case ConsoleKey.DownArrow:
-                    for (int n = 0; n < 3; n++)
-                    {
-                        for (int row = 0; row < 3; row++)
-                        {
-                            if (Grid[row + 1, i] == 0)
-                            {
-                                Grid[row + 1, i] = Grid[row, i];
-                                Grid[row, i] = 0;
-                                if (Grid[row + 1, i] != 0) row--;
-                            }
-                        }
-                    }
-                    break;
+        private static void RotateGrid()
+        {
+            int[,] newGrid = new int[4, 4];
 
-                case ConsoleKey.UpArrow:
-                    for (int n = 3; n > 0; n--)
+            for (int i = 3; i >= 0; --i)
+            {
+                for (int ii = 0; ii < 4; ++ii)
+                {
+                    newGrid[ii, 3 - i] = Grid[i, ii];
+                }
+            }
+
+            Grid = newGrid;
+        }
+
+        private static void ShiftGrid(int i)
+        {
+            for (int n = 3; n > 0; n--) //Shift rows three times
+            {
+                for (int col = n; col > 0; col--)
+                {
+                    if (Grid[i, col - 1] == 0)
                     {
-                        for (int row = 3; row > 0; row--)
-                        {
-                            if (Grid[row - 1, i] == 0)
-                            {
-                                Grid[row - 1, i] = Grid[row, i];
-                                Grid[row, i] = 0;
-                                if (Grid[row - 1, i] != 0) row++;
-                            }
-                        }
+                        Grid[i, col - 1] = Grid[i, col];
+                        Grid[i, col] = 0;
+                        if (Grid[i, col - 1] != 0) col++;
                     }
-                    break;
+                }
             }
         }
 
