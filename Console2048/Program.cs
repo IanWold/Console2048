@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using C = System.Console;
 
 namespace Console2048
@@ -8,7 +9,8 @@ namespace Console2048
     {
         static int[,] Grid = new int[4, 4];
         static int Score = 0;
-        static List<ConsoleKey> Konami = new List<ConsoleKey>();
+        static int MaxInt = 2048;
+        static int GridSize = 4;
 
         static void Intro()
         {
@@ -36,6 +38,19 @@ namespace Console2048
 
             Intro();
 
+            StreamReader reader = new StreamReader("Settings.txt");
+            int _GridSize = Convert.ToInt32(reader.ReadLine());
+            if (_GridSize > 1)
+            {
+                Grid = new int[_GridSize, _GridSize];
+                GridSize = _GridSize;
+            }
+
+            int _MaxInt = Convert.ToInt32(reader.ReadLine());
+            if (_MaxInt < 20)
+                MaxInt = Convert.ToInt32(Math.Pow(2, _MaxInt));
+            reader.Close();
+
             ConsoleKey Input = ConsoleKey.A;
             bool DoAdd = true;
 
@@ -57,8 +72,6 @@ namespace Console2048
                     C.Write(">: ");
 
                     Input = C.ReadKey().Key;
-                    Konami.Add(Input);
-                    CheckKonami();
 
                     switch (Input)
                     {
@@ -123,10 +136,10 @@ namespace Console2048
 
         private static void MoveGrid()
         {
-            for (int row = 0; row < 4; row++) //rows
+            for (int row = 0; row < GridSize; row++) //rows
             {
                 ShiftGrid(row);
-                for (int col = 0; col < 3; col++) //columns
+                for (int col = 0; col < GridSize - 1; col++) //columns
                 {
                     if (Grid[row, col] == Grid[row, col + 1])
                     {
@@ -135,7 +148,7 @@ namespace Console2048
                         Grid[row, col + 1] = 0;
 
                         Score += n;
-                        if (n == 2048) throw new Exception("You won the game!");
+                        if (n == MaxInt) throw new Exception("You won the game!");
                     }
                 }
                 ShiftGrid(row);
@@ -144,13 +157,13 @@ namespace Console2048
 
         private static void RotateGrid()
         {
-            int[,] newGrid = new int[4, 4];
+            int[,] newGrid = new int[GridSize, GridSize];
 
-            for (int i = 3; i >= 0; --i)
+            for (int i = GridSize - 1; i >= 0; --i)
             {
-                for (int ii = 0; ii < 4; ++ii)
+                for (int ii = 0; ii < GridSize; ++ii)
                 {
-                    newGrid[ii, 3 - i] = Grid[i, ii];
+                    newGrid[ii, GridSize - (1 + i)] = Grid[i, ii];
                 }
             }
 
@@ -159,7 +172,7 @@ namespace Console2048
 
         private static void ShiftGrid(int i)
         {
-            for (int n = 3; n > 0; n--) //Shift rows three times
+            for (int n = GridSize - 1; n > 0; n--) //Shift rows three times
             {
                 for (int col = n; col > 0; col--)
                 {
@@ -176,8 +189,8 @@ namespace Console2048
         static void AddNumber()
         {
             bool isOpen = false;
-            for (int i = 0; i < 4; i++)
-                for (int ii = 0; ii < 4; ii++)
+            for (int i = 0; i < GridSize; i++)
+                for (int ii = 0; ii < GridSize; ii++)
                     if (Grid[i, ii] == 0)
                         isOpen = true;
 
@@ -197,40 +210,31 @@ namespace Console2048
         static void WriteGrid()
         {
             C.WriteLine();
+            int TotalSpaces = MaxInt.ToString().Length;
 
-            for (int i = 0; i < 4; i++ )
+            for (int i = 0; i < GridSize; i++)
             {
-                for (int ii = 0; ii < 4; ii++)
+                for (int ii = 0; ii < GridSize; ii++)
                 {
+                    C.Write(" | ");
                     if (Grid[i, ii] != 0)
                     {
-                        switch (Grid[i, ii].ToString().Length)
-                        {
-                            case 1:
-                                C.Write(" |    ");
-                                WriteColor(Grid[i, ii], ConsoleColor.DarkGray);
-                                break;
-
-                            case 2:
-                                C.Write(" |   ");
-                                WriteColor(Grid[i, ii], ConsoleColor.DarkRed);
-                                break;
-
-                            case 3:
-                                C.Write(" |  ");
-                                WriteColor(Grid[i, ii], ConsoleColor.Red);
-                                break;
-
-                            case 4:
-                                C.Write(" | ");
-                                WriteColor(Grid[i, ii], ConsoleColor.DarkMagenta);
-                                break;
-                        }
+                        WriteChar(' ', TotalSpaces - Grid[i, ii].ToString().Length);
+                        WriteColor(Grid[i, ii], ConsoleColor.DarkGray);
                     }
-                    else C.Write(" |     ");
+                    else WriteChar(' ', TotalSpaces);
                 }
                 C.WriteLine();
-                C.WriteLine("----------------------------");
+                WriteChar('-', (3 + TotalSpaces) * GridSize);
+                C.WriteLine();
+            }
+        }
+
+        static void WriteChar(char c, int n)
+        {
+            for (int i = 0; i < n; i++)
+            {
+                C.Write(c);
             }
         }
 
@@ -239,23 +243,6 @@ namespace Console2048
             C.ForegroundColor = color;
             C.Write(toWrite);
             C.ForegroundColor = ConsoleColor.Black;
-        }
-
-        private static void CheckKonami()
-        {
-            var n = Konami.Count;
-            if (n > 9)
-                if (Konami[n - 1] == ConsoleKey.A)
-                    if (Konami[n - 2] == ConsoleKey.B)
-                        if (Konami[n - 3] == ConsoleKey.RightArrow)
-                            if (Konami[n - 4] == ConsoleKey.LeftArrow)
-                                if (Konami[n - 5] == ConsoleKey.RightArrow)
-                                    if (Konami[n - 6] == ConsoleKey.LeftArrow)
-                                        if (Konami[n - 7] == ConsoleKey.DownArrow)
-                                            if (Konami[n - 8] == ConsoleKey.DownArrow)
-                                                if (Konami[n - 9] == ConsoleKey.UpArrow)
-                                                    if (Konami[n - 10] == ConsoleKey.UpArrow)
-                                                        throw new Exception("Open source easter eggs aren't as much fun.");
         }
     }
 }

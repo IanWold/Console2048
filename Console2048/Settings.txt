@@ -1,0 +1,5 @@
+﻿4
+11
+
+Line 1 contains the size of the grid (default 4),
+Line 2 contains the power of 2 to which the game progresses (default 11).
