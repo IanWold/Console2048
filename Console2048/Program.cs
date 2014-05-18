@@ -9,8 +9,12 @@ namespace Console2048
     {
         static int[,] Grid = new int[4, 4];
         static int Score = 0;
+        static int[,] UndoGrid = new int[4, 4];
+        static int UndoScore = 0;
+        static bool HasUndone = true;
         static int MaxInt = 2048;
         static int GridSize = 4;
+        static int MaxUndo = 1;
 
         static void Intro()
         {
@@ -32,20 +36,27 @@ namespace Console2048
 
         static void ReadSettings()
         {
-            StreamReader reader = new StreamReader("Settings.txt");
-
-            int _GridSize = Convert.ToInt32(reader.ReadLine());
-            if (_GridSize > 1)
+            try
             {
-                Grid = new int[_GridSize, _GridSize];
-                GridSize = _GridSize;
+                StreamReader reader = new StreamReader("Settings.txt");
+
+                int _GridSize = Convert.ToInt32(reader.ReadLine());
+                if (_GridSize > 1)
+                {
+                    Grid = new int[_GridSize, _GridSize];
+                    UndoGrid = new int[_GridSize, _GridSize];
+                    GridSize = _GridSize;
+                }
+
+                int _MaxInt = Convert.ToInt32(reader.ReadLine());
+                if (_MaxInt < 20)
+                    MaxInt = Convert.ToInt32(Math.Pow(2, _MaxInt));
+
+                MaxUndo = Convert.ToInt32(reader.ReadLine());
+
+                reader.Close();
             }
-
-            int _MaxInt = Convert.ToInt32(reader.ReadLine());
-            if (_MaxInt < 20)
-                MaxInt = Convert.ToInt32(Math.Pow(2, _MaxInt));
-
-            reader.Close();
+            catch { }
         }
 
         static void Main(string[] args)
@@ -66,15 +77,13 @@ namespace Console2048
             {
                 try
                 {
-                    if (DoAdd)
-                    {
-                        AddNumber();
-                        C.Clear();
-                        C.WriteLine("Score: " + Score);
-                        WriteGrid();
-                        C.WriteLine();
-                    }
+                    if (DoAdd) AddNumber();
                     else DoAdd = true;
+
+                    C.Clear();
+                    C.WriteLine("Score: " + Score + " | Undos: " + MaxUndo);
+                    WriteGrid();
+                    C.WriteLine();
                     C.Write(">: ");
 
                     Input = C.ReadKey().Key;
@@ -105,6 +114,22 @@ namespace Console2048
                             C.WriteLine("Use the arrow keys on the keyboard to move");
                             DoAdd = false;
                             break;
+                            
+                        case ConsoleKey.U:
+                            if (MaxUndo != 0)
+                            {
+                                if (!HasUndone)
+                                {
+                                    Grid = UndoGrid;
+                                    Score = UndoScore;
+                                    HasUndone = true;
+                                    MaxUndo--;
+                                    DoAdd = false;
+                                }
+                                else C.WriteLine("You may only undo once at a time.");
+                            }
+                            else C.WriteLine("You may not undo anymore.");
+                            break;
 
                         default:
                             C.WriteLine();
@@ -130,6 +155,10 @@ namespace Console2048
 
         private static void MoveGrid(int r1, int r2)
         {
+            HasUndone = false;
+            UndoGrid = Grid;
+            UndoScore = Score;
+
             RotateGrid(r1);
             for (int row = 0; row < GridSize; row++) //rows
             {
@@ -202,7 +231,6 @@ namespace Console2048
                     place = new Tuple<int, int>(rnd.Next(0, 4), rnd.Next(0, 4));
 
                 int[] array = {2,2,2,4};
-
                 Grid[place.Item1, place.Item2] = array[rnd.Next(0, array.Length)];
             }
             else throw new Exception("The game is over.");
