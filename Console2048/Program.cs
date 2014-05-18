@@ -30,15 +30,10 @@ namespace Console2048
             C.Clear();
         }
 
-        static void Main(string[] args)
+        static void ReadSettings()
         {
-            C.BackgroundColor = ConsoleColor.White;
-            C.ForegroundColor = ConsoleColor.Black;
-            C.Clear();
-
-            Intro();
-
             StreamReader reader = new StreamReader("Settings.txt");
+
             int _GridSize = Convert.ToInt32(reader.ReadLine());
             if (_GridSize > 1)
             {
@@ -49,7 +44,18 @@ namespace Console2048
             int _MaxInt = Convert.ToInt32(reader.ReadLine());
             if (_MaxInt < 20)
                 MaxInt = Convert.ToInt32(Math.Pow(2, _MaxInt));
+
             reader.Close();
+        }
+
+        static void Main(string[] args)
+        {
+            C.BackgroundColor = ConsoleColor.White;
+            C.ForegroundColor = ConsoleColor.Black;
+            C.Clear();
+
+            Intro();
+            ReadSettings();
 
             ConsoleKey Input = ConsoleKey.A;
             bool DoAdd = true;
@@ -76,31 +82,19 @@ namespace Console2048
                     switch (Input)
                     {
                         case ConsoleKey.LeftArrow:
-                            MoveGrid();
+                            MoveGrid(0, 0);
                             break;
 
                         case ConsoleKey.RightArrow:
-                            RotateGrid();
-                            RotateGrid();
-                            MoveGrid();
-                            RotateGrid();
-                            RotateGrid();
+                            MoveGrid(2, 2);
                             break;
 
                         case ConsoleKey.DownArrow:
-                            RotateGrid();
-                            MoveGrid();
-                            RotateGrid();
-                            RotateGrid();
-                            RotateGrid();
+                            MoveGrid(1, 3);
                             break;
 
                         case ConsoleKey.UpArrow:
-                            RotateGrid();
-                            RotateGrid();
-                            RotateGrid();
-                            MoveGrid();
-                            RotateGrid();
+                            MoveGrid(3, 1);
                             break;
 
                         case ConsoleKey.H:
@@ -134,8 +128,9 @@ namespace Console2048
             C.ReadKey();
         }
 
-        private static void MoveGrid()
+        private static void MoveGrid(int r1, int r2)
         {
+            RotateGrid(r1);
             for (int row = 0; row < GridSize; row++) //rows
             {
                 ShiftGrid(row);
@@ -153,26 +148,30 @@ namespace Console2048
                 }
                 ShiftGrid(row);
             }
+            RotateGrid(r2);
         }
 
-        private static void RotateGrid()
+        private static void RotateGrid(int n)
         {
-            int[,] newGrid = new int[GridSize, GridSize];
-
-            for (int i = GridSize - 1; i >= 0; --i)
+            for (int repeat = 0; repeat < n; repeat++)
             {
-                for (int ii = 0; ii < GridSize; ++ii)
-                {
-                    newGrid[ii, GridSize - (1 + i)] = Grid[i, ii];
-                }
-            }
+                int[,] newGrid = new int[GridSize, GridSize];
 
-            Grid = newGrid;
+                for (int i = GridSize - 1; i >= 0; --i)
+                {
+                    for (int ii = 0; ii < GridSize; ++ii)
+                    {
+                        newGrid[ii, GridSize - (1 + i)] = Grid[i, ii];
+                    }
+                }
+
+                Grid = newGrid;
+            }
         }
 
         private static void ShiftGrid(int i)
         {
-            for (int n = GridSize - 1; n > 0; n--) //Shift rows three times
+            for (int n = GridSize - 1; n > 0; n--) //Shift rows GridSize - 1 times
             {
                 for (int col = n; col > 0; col--)
                 {
@@ -202,7 +201,9 @@ namespace Console2048
                 while (Grid[place.Item1, place.Item2] != 0)
                     place = new Tuple<int, int>(rnd.Next(0, 4), rnd.Next(0, 4));
 
-                Grid[place.Item1, place.Item2] = rnd.Next(1, 3) * 2;
+                int[] array = {2,2,2,4};
+
+                Grid[place.Item1, place.Item2] = array[rnd.Next(0, array.Length)];
             }
             else throw new Exception("The game is over.");
         }
@@ -220,7 +221,7 @@ namespace Console2048
                     if (Grid[i, ii] != 0)
                     {
                         WriteChar(' ', TotalSpaces - Grid[i, ii].ToString().Length);
-                        WriteColor(Grid[i, ii], ConsoleColor.DarkGray);
+                        WriteColor(Grid[i, ii], Grid[i, ii].ToString().Length);
                     }
                     else WriteChar(' ', TotalSpaces);
                 }
@@ -238,9 +239,30 @@ namespace Console2048
             }
         }
 
-        static void WriteColor(int toWrite, ConsoleColor color)
+        static void WriteColor(int toWrite, int length)
         {
-            C.ForegroundColor = color;
+            switch (length)
+            {
+                case 1:
+                    C.ForegroundColor = ConsoleColor.DarkGray;
+                    break;
+
+                case 2:
+                    C.ForegroundColor = ConsoleColor.DarkRed;
+                    break;
+
+                case 3:
+                    C.ForegroundColor = ConsoleColor.Red;
+                    break;
+
+                case 4:
+                    C.ForegroundColor = ConsoleColor.DarkMagenta;
+                    break;
+
+                default:
+                    C.ForegroundColor = ConsoleColor.Magenta;
+                    break;
+            }
             C.Write(toWrite);
             C.ForegroundColor = ConsoleColor.Black;
         }
