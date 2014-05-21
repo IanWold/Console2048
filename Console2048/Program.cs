@@ -200,7 +200,7 @@ namespace Console2048
 
         private static void ShiftGrid(int i)
         {
-            for (int n = GridSize - 1; n > 0; n--) //Shift rows GridSize - 1 times
+            for (int n = 0; n < GridSize; n++) //Shift rows GridSize - 1 times
             {
                 for (int col = n; col > 0; col--)
                 {
@@ -225,10 +225,10 @@ namespace Console2048
             if (isOpen)
             {
                 Random rnd = new Random();
-                Tuple<int, int> place = new Tuple<int, int>(rnd.Next(0, 4), rnd.Next(0, 4));
+                Tuple<int, int> place = new Tuple<int, int>(rnd.Next(0, GridSize), rnd.Next(0, GridSize));
 
                 while (Grid[place.Item1, place.Item2] != 0)
-                    place = new Tuple<int, int>(rnd.Next(0, 4), rnd.Next(0, 4));
+                    place = new Tuple<int, int>(rnd.Next(0, GridSize), rnd.Next(0, GridSize));
 
                 int[] array = {2,2,2,4};
                 Grid[place.Item1, place.Item2] = array[rnd.Next(0, array.Length)];
@@ -261,10 +261,7 @@ namespace Console2048
 
         static void WriteChar(char c, int n)
         {
-            for (int i = 0; i < n; i++)
-            {
-                C.Write(c);
-            }
+            for (int i = 0; i < n; i++) C.Write(c);
         }
 
         static void WriteColor(int toWrite, int length)
