@@ -70,6 +70,7 @@ namespace Console2048
 
             ConsoleKey Input = ConsoleKey.A;
             bool DoAdd = true;
+            bool DoWrite = true;
 
             AddNumber();
 
@@ -77,15 +78,22 @@ namespace Console2048
             {
                 try
                 {
-                    if (DoAdd) AddNumber();
+                    if (DoAdd)
+                    {
+                        AddNumber();
+                    }
                     else DoAdd = true;
 
-                    C.Clear();
-                    C.WriteLine("Score: " + Score + " | Undos: " + MaxUndo);
-                    WriteGrid();
+                    if (DoWrite)
+                    {
+                        C.Clear();
+                        C.WriteLine("Score: " + Score + " | Undos: " + MaxUndo);
+                        WriteGrid();
+                    }
+                    else DoWrite = true;
+
                     C.WriteLine();
                     C.Write(">: ");
-
                     Input = C.ReadKey().Key;
 
                     switch (Input)
@@ -106,16 +114,9 @@ namespace Console2048
                             MoveGrid(3, 1);
                             break;
 
-                        case ConsoleKey.H:
-                            C.WriteLine();
-                            C.WriteLine("Console2048 Copyright 2014 Ian Wold");
-                            C.WriteLine("Licensed under the MIT Open-Source License");
-                            C.WriteLine();
-                            C.WriteLine("Use the arrow keys on the keyboard to move");
-                            DoAdd = false;
-                            break;
-                            
                         case ConsoleKey.U:
+                            C.WriteLine();
+
                             if (MaxUndo != 0)
                             {
                                 if (!HasUndone)
@@ -128,14 +129,27 @@ namespace Console2048
                                 }
                                 else C.WriteLine("You may only undo once at a time.");
                             }
-                            else C.WriteLine("You may not undo anymore.");
+                            else
+                            {
+                                C.WriteLine("You may not undo anymore.");
+                                DoAdd = DoWrite = false;
+                            }
+                            break;
+
+                        case ConsoleKey.H:
+                            C.WriteLine();
+                            C.WriteLine("Console2048 Copyright 2014 Ian Wold");
+                            C.WriteLine("Licensed under the MIT Open-Source License");
+                            C.WriteLine();
+                            C.WriteLine("Use the arrow keys on the keyboard to move");
+                            DoAdd = DoWrite = false;
                             break;
 
                         default:
                             C.WriteLine();
                             C.WriteLine("That is not an acceptable input.");
                             C.WriteLine("Use the arrow keys to move around.");
-                            DoAdd = false;
+                            DoAdd = DoWrite = false;
                             break;
 
                     }
