@@ -78,10 +78,7 @@ namespace Console2048
             {
                 try
                 {
-                    if (DoAdd)
-                    {
-                        AddNumber();
-                    }
+                    if (DoAdd) AddNumber();
                     else DoAdd = true;
 
                     if (DoWrite)
@@ -201,12 +198,8 @@ namespace Console2048
                 int[,] newGrid = new int[GridSize, GridSize];
 
                 for (int i = GridSize - 1; i >= 0; --i)
-                {
                     for (int ii = 0; ii < GridSize; ++ii)
-                    {
                         newGrid[ii, GridSize - (1 + i)] = Grid[i, ii];
-                    }
-                }
 
                 Grid = newGrid;
             }
