@@ -61,6 +61,9 @@ namespace Console2048
 
         static void Main(string[] args)
         {
+            var BackgroundBefore = C.BackgroundColor;
+            var ForegroundBefore = C.ForegroundColor;
+
             C.BackgroundColor = ConsoleColor.White;
             C.ForegroundColor = ConsoleColor.Black;
             C.Clear();
@@ -96,19 +99,19 @@ namespace Console2048
                     switch (Input)
                     {
                         case ConsoleKey.LeftArrow:
-                            MoveGrid(0, 0);
+                            DoAdd = DoWrite = MoveGrid(0, 0);
                             break;
 
                         case ConsoleKey.RightArrow:
-                            MoveGrid(2, 2);
+                            DoAdd = DoWrite = MoveGrid(2, 2);
                             break;
 
                         case ConsoleKey.DownArrow:
-                            MoveGrid(1, 3);
+                            DoAdd = DoWrite = MoveGrid(1, 3);
                             break;
 
                         case ConsoleKey.UpArrow:
-                            MoveGrid(3, 1);
+                            DoAdd = DoWrite = MoveGrid(3, 1);
                             break;
 
                         case ConsoleKey.U:
@@ -162,9 +165,13 @@ namespace Console2048
 
             C.WriteLine("Press any key to continue.");
             C.ReadKey();
+
+            C.BackgroundColor = BackgroundBefore;
+            C.ForegroundColor = ForegroundBefore;
+            C.Clear();
         }
 
-        private static void MoveGrid(int r1, int r2)
+        private static bool MoveGrid(int r1, int r2)
         {
             HasUndone = false;
             UndoGrid = Grid;
@@ -189,6 +196,20 @@ namespace Console2048
                 ShiftGrid(row);
             }
             RotateGrid(r2);
+
+            return AreGridsUnequal();
+        }
+
+        private static bool AreGridsUnequal()
+        {
+            var toReturn = false;
+
+            for (int i = 0; i < GridSize; i++)
+                for (int ii = 0; ii < GridSize; ii++)
+                    if (Grid[i, ii] != UndoGrid[i, ii])
+                        toReturn = true;
+
+            return toReturn;
         }
 
         private static void RotateGrid(int n)

@@ -85,7 +85,7 @@
   <ItemGroup>
     <Content Include="2048Ico.ico" />
     <Content Include="Settings.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
