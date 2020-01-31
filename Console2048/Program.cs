@@ -7,14 +7,14 @@ namespace Console2048
 {
     class Program
     {
-        static int[,] Grid = new int[4, 4];
-        static int Score = 0;
-        static int[,] UndoGrid = new int[4, 4];
-        static int UndoScore = 0;
-        static bool HasUndone = true;
         static int MaxInt = 2048;
         static int GridSize = 4;
+        static int Score = 0;
+        static int UndoScore = 0;
         static int MaxUndo = 1;
+        static bool HasUndone = true;
+        static int[,] Grid = new int[4, 4];
+        static int[,] UndoGrid = new int[4, 4];
 
         static void Intro()
         {
