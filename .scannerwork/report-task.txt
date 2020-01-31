@@ -1,0 +1,7 @@
+organization=ianwold
+projectKey=IanWold_Console2048
+serverUrl=https://sonarcloud.io
+serverVersion=8.0.0.4292
+dashboardUrl=https://sonarcloud.io/dashboard?id=IanWold_Console2048
+ceTaskId=AW_8WMGpKa6oQtbbuFED
+ceTaskUrl=https://sonarcloud.io/api/ce/task?id=AW_8WMGpKa6oQtbbuFED
